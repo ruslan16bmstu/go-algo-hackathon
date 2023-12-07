@@ -7,7 +7,7 @@ import (
 	logger "pocket-trader-backend/logger"
 )
 
-const defaultConfigPath = "server.config.toml"
+const defaultConfigPath = "main-server.config.toml"
 
 func main() {
 	configPath, exists := os.LookupEnv("CONFIG")

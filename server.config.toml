@@ -1,5 +1,5 @@
 # TOML config
-#log_path = "./server.log" #uncomment if want log to file
+#log_path = "./main-server.log" #uncomment if want log to file
 
 [server]
 ip              = "localhost"

@@ -3,7 +3,7 @@ package trader;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/ruslan16bmstu/go-algo-hackathon/server/pb";
+option go_package = "github.com/ruslan16bmstu/go-algo-hackathon/main-server/pb";
 
 message Recommendations {}
 

@@ -12,7 +12,7 @@ type Config struct {
 		Ip            string `mapstructure:"ip"`
 		Port          int    `mapstructure:"port"`
 		TickerTimeMin int    `mapstructure:"ticker_time_min"`
-	} `mapstructure:"server"`
+	} `mapstructure:"main-server"`
 	LogPath string `mapstructure:"log_path"`
 }
 
