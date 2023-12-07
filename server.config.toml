@@ -1,0 +1,10 @@
+# TOML config
+#log_path = "./server.log" #uncomment if want log to file
+
+[server]
+ip              = "localhost"
+port            = 8888
+ticker_time_min = 5
+
+
+

@@ -1,0 +1,14 @@
+syntax = "proto3";
+package trader;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/ruslan16bmstu/go-algo-hackathon/server/pb";
+
+message Recommendations {}
+
+
+service Trader {
+  rpc
+}
+
