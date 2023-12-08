@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { createChart, ISeriesApi } from 'lightweight-charts'
 import { CandleData } from '../../api'
 
@@ -21,33 +21,36 @@ const props = defineProps<{
   prediction: PredictionData[]
 }>()
 
-onMounted(() => {
+// Функция для обновления графика при изменении данных
+const updateChart = () => {
+  if (candleSeries && predictionSeries) {
+    candleSeries.setData(props.candles)
+    predictionSeries.setData(props.prediction.map(point => ({
+      time: point.time,
+      value: point.value,
+    })))
+  }
+}
+
+const createStockChart = () => {
   if (chart.value) {
     const priceChart = createChart(chart.value, {
       width: chart.value.clientWidth,
       height: chart.value.clientHeight,
     })
 
-    // Создание свечного графика
-    candleSeries = priceChart.addCandlestickSeries({
-      upColor: 'green',
-      downColor: 'red',
-      borderVisible: true,
-      wickVisible: true,
-    })
+    candleSeries = priceChart.addCandlestickSeries()
+    predictionSeries = priceChart.addLineSeries()
 
-    candleSeries.setData(props.candles)
-
-    // Создание линии прогноза
-    predictionSeries = priceChart.addLineSeries({
-      color: 'blue',
-      lineWidth: 1,
-    })
-
-    predictionSeries.setData(props.prediction.map(point => ({
-      time: point.time,
-      value: point.value,
-    })))
+    updateChart()
   }
+}
+
+onMounted(() => {
+  createStockChart()
+})
+
+watch(() => [props.candles, props.prediction], () => {
+  updateChart()
 })
 </script>
