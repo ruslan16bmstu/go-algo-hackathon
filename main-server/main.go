@@ -3,9 +3,11 @@ package main
 import (
 	"log"
 	"os"
-	config "pocket-trader-backend/config"
-	logger "pocket-trader-backend/logger"
 )
+
+import config "pocket-trader-backend/config"
+import logger "pocket-trader-backend/logger"
+import server "pocket-trader-backend/rpc-server"
 
 const defaultConfigPath = "main-server.config.toml"
 
@@ -25,4 +27,7 @@ func main() {
 	}
 
 	log.Println(c)
+
+	go server.RunGrpc(c.Server.GrpcPort)
+	server.RunRest(c.Server.Ip, c.Server.GrpcPort, c.Server.HttpPort)
 }
