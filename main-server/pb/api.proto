@@ -34,12 +34,12 @@ message StockResponse {
 service Trader {
   rpc GetGlobalRating (GlobalRatingRequest) returns (GlobalRatingResponse) {
     option (google.api.http) = {
-      get: "/rating/global"
+      get: "/rating"
     };
   };
   rpc GetStock (StockRequest) returns (StockResponse) {
     option (google.api.http) = {
-      get: "/rating/{id}"
+      get: "/stock/{id}"
     };
   }
 }

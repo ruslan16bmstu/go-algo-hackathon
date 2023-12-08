@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/rating/global": {
+    "/rating": {
       "get": {
         "operationId": "Trader_GetGlobalRating",
         "responses": {
@@ -54,7 +54,7 @@
         ]
       }
     },
-    "/rating/{id}": {
+    "/stock/{id}": {
       "get": {
         "operationId": "Trader_GetStock",
         "responses": {

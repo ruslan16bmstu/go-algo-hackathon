@@ -133,7 +133,7 @@ func RegisterTraderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/trader.Trader/GetGlobalRating", runtime.WithHTTPPathPattern("/rating/global"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/trader.Trader/GetGlobalRating", runtime.WithHTTPPathPattern("/rating"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -158,7 +158,7 @@ func RegisterTraderHandlerServer(ctx context.Context, mux *runtime.ServeMux, ser
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/trader.Trader/GetStock", runtime.WithHTTPPathPattern("/rating/{id}"))
+		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/trader.Trader/GetStock", runtime.WithHTTPPathPattern("/stock/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -222,7 +222,7 @@ func RegisterTraderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/trader.Trader/GetGlobalRating", runtime.WithHTTPPathPattern("/rating/global"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/trader.Trader/GetGlobalRating", runtime.WithHTTPPathPattern("/rating"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -244,7 +244,7 @@ func RegisterTraderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
 		var err error
 		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/trader.Trader/GetStock", runtime.WithHTTPPathPattern("/rating/{id}"))
+		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/trader.Trader/GetStock", runtime.WithHTTPPathPattern("/stock/{id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -264,9 +264,9 @@ func RegisterTraderHandlerClient(ctx context.Context, mux *runtime.ServeMux, cli
 }
 
 var (
-	pattern_Trader_GetGlobalRating_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"rating", "global"}, ""))
+	pattern_Trader_GetGlobalRating_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"rating"}, ""))
 
-	pattern_Trader_GetStock_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"rating", "id"}, ""))
+	pattern_Trader_GetStock_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 1, 0, 4, 1, 5, 1}, []string{"stock", "id"}, ""))
 )
 
 var (
