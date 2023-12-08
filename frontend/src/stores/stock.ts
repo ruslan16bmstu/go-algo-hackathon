@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getAllStocks, Stock } from '../api'
+import { getAllStocks, type StockWithPrice } from '../api'
 import { useLoading } from '../utils/loading'
 
 export const useStockStore = defineStore('stock', () => {
-  const data = ref<Stock[]>([])
+  const data = ref<StockWithPrice[]>([])
   const {isLoading, load} = useLoading()
   
   const loadData = async () => {
