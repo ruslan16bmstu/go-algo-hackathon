@@ -1,6 +1,9 @@
 <template>
   <div class="flex items-center pad text-sm justify-between">
-    <div class="font-bold">{{ stock.secId }}</div>
+    <div class="flex items-center">
+      <div class="font-bold mr-2 w-10">{{ stock.secId }}</div>
+      <div>{{formatStockName(stock.name)}}</div>
+    </div>
     <div class="flex space-x-4 items-center">
       <div class="text-black">{{ formatPrice(stock.price) }}</div>
       <div :class="{'green-bg': stock.delta > 0, 'red-bg': stock.delta <= 0}"
@@ -18,15 +21,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import LineChartSVG from '../shared/LinesChartSVG.vue'
+import { formatDelta, formatPrice, formatStockName } from './format'
 import type { StockWithPrediction } from './types'
 
 const props = defineProps<{
   stock: StockWithPrediction
   prediction: { x: number, y: number }[]
 }>()
-
-const formatPrice = (price: number) => price.toPrecision().replace('.', ',')
-const formatDelta = (delta: number) => (delta > 0 ? '+' : '') + formatPrice(delta) + '%'
 
 const linesData = computed(() => {
   const lastPoint = props.prediction[props.prediction.length - 1]
