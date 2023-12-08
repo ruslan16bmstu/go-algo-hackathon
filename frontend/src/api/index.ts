@@ -92,3 +92,43 @@ async function getStockPrice(symbol: string): Promise<number | null> {
     return null
   }
 }
+
+export interface CandleData {
+  open: number; // Цена открытия
+  close: number; // Цена закрытия
+  high: number; // Максимальная цена
+  low: number; // Минимальная цена
+  time: string; // Временная метка (время свечи)
+  volume: number; // Объем свечи
+}
+
+export async function getStockCandles(symbol: string, from: string, to: string): Promise<CandleData[]> {
+  const API_URL = `https://iss.moex.com/iss/history/engines/stock/markets/shares/boards/TQBR/securities/${symbol}.json`
+  
+  try {
+    const response = await axios.get(API_URL, {
+      params: {
+        from: from,
+        to: to,
+        interval: '24',
+      },
+    })
+    
+    if (response.status === 200) {
+      return response.data.history.data.map((candle: any[]) => ({
+        open: candle[6],
+        close: candle[11],
+        high: candle[8],
+        low: candle[7],
+        time: candle[1],
+        volume: candle[12],
+      }))
+    } else {
+      throw new Error('Failed to fetch data')
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error)
+    return []
+  }
+}
+
