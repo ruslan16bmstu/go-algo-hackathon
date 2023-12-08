@@ -4,7 +4,6 @@ export interface Point {
   y: number
 }
 
-
 export const convertToCanvasCoords = (point: Point, height: number): Point => {
   return {
     x: point.x, // x остаётся без изменений

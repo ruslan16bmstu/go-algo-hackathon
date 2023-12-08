@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, defineProps, computed } from 'vue'
-import { findMinMax, Point, scalePointsToCanvas } from '../../utils'
+import { findMinMax, Point, scalePointsToCanvas } from '../../utils/point'
 
 interface Line {
   points: Point[]
