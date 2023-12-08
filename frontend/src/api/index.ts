@@ -1,13 +1,16 @@
 import axios, { AxiosResponse } from 'axios'
 
-export interface Stock {
+export type Stock = {
   name: string;
   code: string;
   secId: string;
-  // Другие свойства акции, которые вам могут быть интересны
 }
 
-export async function getAllStocks(): Promise<Stock[]> {
+export type StockWithPrice = Stock & {
+  price: number
+}
+
+export async function getAllStocks(): Promise<StockWithPrice[]> {
   try {
     const allStocks: Stock[] = []
     let start = 0
@@ -45,9 +48,47 @@ export async function getAllStocks(): Promise<Stock[]> {
       }
     }
     
-    return allStocks
+    const stockWithPriceArr: StockWithPrice[] = []
+    
+    const reqs: Promise<any>[] = []
+    for (const s of allStocks) {
+      reqs.push(getStockPrice(s.secId))
+    }
+    const res = await Promise.allSettled(reqs)
+    
+    for (let i = 0; i < allStocks.length; i++) {
+      const price = (res[i] as any).value
+      if (price != null) {
+        stockWithPriceArr.push({...allStocks[i], price})
+      }
+    }
+    
+    return stockWithPriceArr
   } catch (error) {
     console.error('Произошла ошибка:', error)
     return []
+  }
+}
+
+interface MarketData {
+  data: any[]; // Здесь можно использовать тип данных, соответствующий структуре ответа API
+}
+
+async function getStockPrice(symbol: string): Promise<number | null> {
+  const API_URL = `https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/${symbol}.json`
+  
+  try {
+    const response = await axios.get(API_URL)
+    
+    // Проверяем успешность запроса и наличие данных
+    if (response.status === 200 && response.data.marketdata.data.length) {
+      const price = response.data['marketdata'].data[0][12] // Индекс цены в полученных данных
+      return price ? Number(price) : null
+    } else {
+      return null
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error)
+    return null
   }
 }
