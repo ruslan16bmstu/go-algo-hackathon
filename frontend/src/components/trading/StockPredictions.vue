@@ -1,6 +1,6 @@
 <template>
-  <div class="flex space-x-0.5 bg-[#f2f2f2] min-h-[500px]">
-    <div class="grow basis-1/2 bg-white">
+  <div class="flex space-x-0.5 bg-[#f2f2f2] h-[500px]">
+    <div class="grow basis-1/2 bg-white overflow-y-auto">
       <template v-for="(stock, i) in profitStocks" :key="i">
         <router-link :to="'/'+stock.secId">
           <StockShortInfo
@@ -11,7 +11,7 @@
         </router-link>
       </template>
     </div>
-    <div class="grow basis-1/2 bg-white">
+    <div class="grow basis-1/2 bg-white overflow-y-auto">
       <template v-for="(stock, i) in nonProfitStocks" :key="i">
         <router-link :to="'/'+stock.secId">
           <StockShortInfo
@@ -34,8 +34,8 @@ const props = defineProps<{
   stockPredictions: Array<StockWithPrediction>
 }>()
 
-const profitStocks = computed(() => props.stockPredictions.filter(s => s.delta > 0))
-const nonProfitStocks = computed(() => props.stockPredictions.filter(s => s.delta <= 0))
+const profitStocks = computed(() => props.stockPredictions.filter(s => s.delta > 0).sort((a, b) => b.delta - a.delta))
+const nonProfitStocks = computed(() => props.stockPredictions.filter(s => s.delta <= 0).sort((a, b) => a.delta - b.delta))
 
 </script>
 
