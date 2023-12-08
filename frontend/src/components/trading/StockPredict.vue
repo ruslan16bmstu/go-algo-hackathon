@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import ShareShortInfo from './ShareShortInfo.vue'
+import ShareShortInfo from './StockShortInfo.vue'
 
 const shares = [
   {

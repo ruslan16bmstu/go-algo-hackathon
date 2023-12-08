@@ -21,11 +21,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import DropdownWithLabel from '../components/shared/DropdownWithLabel.vue'
 import TitlePlate from '../components/shared/TitlePlate.vue'
-import SharesPredict from '../components/trading/SharesPredict.vue'
+import SharesPredict from '../components/trading/StockPredict.vue'
 import PageLayout from '../layouts/PageLayout.vue'
+import { useStockStore } from '../stores/stock'
 
 const selectedIndustryIndex = ref(0)
 
@@ -45,6 +46,12 @@ const industries = [
 ]
 
 const selectedIndustry = computed(() => industries[selectedIndustryIndex.value])
+
+const stockStore = useStockStore()
+
+onMounted(() => {
+  stockStore.loadData()
+})
 
 </script>
 
