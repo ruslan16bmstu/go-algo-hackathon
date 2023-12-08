@@ -37,7 +37,7 @@ export async function getAllStocks(): Promise<StockWithPrice[]> {
         const stocks: Stock[] = stocksData.map((stockData: any) => ({
           code: stockData[0], // Код акции
           secId: stockData[1], // secid
-          name: stockData[2] // Название акции
+          name: stockData[4] // Название акции
           // Другие свойства акции, которые вам могут быть интересны
         }))
         
