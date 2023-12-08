@@ -1,13 +1,13 @@
 import axios, { AxiosResponse } from 'axios'
 
-interface Stock {
+export interface Stock {
   name: string;
   code: string;
   secId: string;
   // Другие свойства акции, которые вам могут быть интересны
 }
 
-async function getAllStocks(): Promise<Stock[]> {
+export async function getAllStocks(): Promise<Stock[]> {
   try {
     const allStocks: Stock[] = []
     let start = 0
@@ -51,5 +51,3 @@ async function getAllStocks(): Promise<Stock[]> {
     return []
   }
 }
-
-export { getAllStocks }
