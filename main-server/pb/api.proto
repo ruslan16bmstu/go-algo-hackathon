@@ -1,14 +1,46 @@
 syntax = "proto3";
 package trader;
 
-import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 
 option go_package = "github.com/ruslan16bmstu/go-algo-hackathon/main-server/pb";
 
-message Recommendations {}
+message GlobalRatingRequest {
+  uint32 skip  = 1;
+  uint32 limit = 2;
+}
+
+message GlobalRatingResponse {
+  message Company {
+    uint32 id          = 1;
+    string name        = 2;
+    float  stock_price = 3;
+    float  rating      = 4;
+  }
+  string           datetime = 1;
+  repeated Company company  = 2;
+}
+
+message StockRequest {
+  uint32 id = 1;
+}
+
+message StockResponse {
+  string name        = 1;
+  float  stock_price = 2;
+}
 
 
 service Trader {
-  rpc
+  rpc GetGlobalRating (GlobalRatingRequest) returns (GlobalRatingResponse) {
+    option (google.api.http) = {
+      get: "/rating/global"
+    };
+  };
+  rpc GetStock (StockRequest) returns (StockResponse) {
+    option (google.api.http) = {
+      get: "/rating/{id}"
+    };
+  }
 }
 
