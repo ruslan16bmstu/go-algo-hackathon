@@ -1,5 +1,5 @@
 build-server:
-	go build
+	go mod tidy && go build
 
 run-server:
 	./pocket-trader-backend
@@ -15,12 +15,11 @@ gen-proto:
 	    --grpc-gateway_out=./pb/gen                      \
 	    --grpc-gateway_opt paths=source_relative         \
 	    --grpc-gateway_opt generate_unbound_methods=true \
-	    --openapiv2_out ./pb/gen                         \
+	    --openapiv2_out ./swagger                        \
 	    ./pb/api.proto
-
 
 clean:
 	rm pocket-trader-backend
 
 
-.PHONY: build-server run-server clean
+.PHONY: build-server run-server gen-proto clean
