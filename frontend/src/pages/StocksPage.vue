@@ -30,11 +30,11 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import TheFooter from '../layout/TheFooter.vue'
-import TheHeader from '../layout/TheHeader.vue'
-import DropdownWithLabel from '../shared/DropdownWithLabel.vue'
-import TitlePlate from '../shared/TitlePlate.vue'
-import SharesPredict from '../trading/SharesPredict.vue'
+import TheFooter from '../components/layout/TheFooter.vue'
+import TheHeader from '../components/layout/TheHeader.vue'
+import DropdownWithLabel from '../components/shared/DropdownWithLabel.vue'
+import TitlePlate from '../components/shared/TitlePlate.vue'
+import SharesPredict from '../components/trading/SharesPredict.vue'
 
 const selectedIndustryIndex = ref(0)
 

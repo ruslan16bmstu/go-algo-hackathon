@@ -2,20 +2,24 @@
   <div class="flex space-x-0.5 bg-[#f2f2f2] min-h-[500px]">
     <div class="grow basis-1/2 bg-white">
       <template v-for="(share, i) in profitShares" :key="i">
-        <ShareShortInfo
-            class="share-in-list"
-            :share="share"
-            :prediction="predictedExampleProfit"
-        />
+        <router-link :to="'/'+share.symbol">
+          <ShareShortInfo
+              class="share-in-list"
+              :share="share"
+              :prediction="predictedExampleProfit"
+          />
+        </router-link>
       </template>
     </div>
     <div class="grow basis-1/2 bg-white">
       <template v-for="(share, i) in nonProfitShares" :key="i">
-        <ShareShortInfo
-            class="share-in-list"
-            :share="share"
-            :prediction="predictedExampleLoose"
-        />
+        <router-link :to="'/'+share.symbol">
+          <ShareShortInfo
+              class="share-in-list"
+              :share="share"
+              :prediction="predictedExampleLoose"
+          />
+        </router-link>
       </template>
     </div>
   </div>
