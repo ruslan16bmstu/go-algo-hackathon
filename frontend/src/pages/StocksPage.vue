@@ -1,40 +1,31 @@
 <template>
-  <div class="w-full">
-    <div class="flex mb-6 justify-center bg-white shadow-md">
-      <TheHeader class="max-w-[1064px]"/>
-    </div>
-    <div class="w-full flex justify-center">
-      <div class="flex flex-col space-y-6 w-[1000px]">
-        <TitlePlate title="Прогнозы"/>
+  <PageLayout>
+    <TitlePlate title="Прогнозы"/>
+    <div>
+      <div class="plate">
         <div>
-          <div class="plate">
-            <div>
-              <div class="font-bold pad">Топ на покупку / продажу</div>
-            </div>
-            <div class="border-t">
-              <div class="pad">
-                <DropdownWithLabel v-model="selectedIndustryIndex" label="Отрасль:" :options="industries"
-                                   class="text-sm"/>
-              </div>
-            </div>
-            <div class="border-t">
-              <SharesPredict/>
-            </div>
+          <div class="font-bold pad">Топ на покупку / продажу</div>
+        </div>
+        <div class="border-t">
+          <div class="pad">
+            <DropdownWithLabel v-model="selectedIndustryIndex" label="Отрасль:" :options="industries"
+                               class="text-sm"/>
           </div>
+        </div>
+        <div class="border-t">
+          <SharesPredict/>
         </div>
       </div>
     </div>
-    <TheFooter/>
-  </div>
+  </PageLayout>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import TheFooter from '../components/layout/TheFooter.vue'
-import TheHeader from '../components/layout/TheHeader.vue'
 import DropdownWithLabel from '../components/shared/DropdownWithLabel.vue'
 import TitlePlate from '../components/shared/TitlePlate.vue'
 import SharesPredict from '../components/trading/SharesPredict.vue'
+import PageLayout from '../layouts/PageLayout.vue'
 
 const selectedIndustryIndex = ref(0)
 
