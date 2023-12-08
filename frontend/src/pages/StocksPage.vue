@@ -22,13 +22,15 @@
 
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import DropdownWithLabel from '../components/shared/DropdownWithLabel.vue'
 import TitlePlate from '../components/shared/TitlePlate.vue'
 import SharesPredict from '../components/trading/StockPredictions.vue'
 import type { StockWithPrediction } from '../components/trading/types'
 import PageLayout from '../layouts/PageLayout.vue'
 import { useStockStore } from '../stores/stock'
+import 'nprogress/nprogress.css'
+import NProgress from 'nprogress'
 
 const selectedIndustryIndex = ref(0)
 
@@ -50,9 +52,20 @@ const industries = [
 const selectedIndustry = computed(() => industries[selectedIndustryIndex.value])
 
 const stockStore = useStockStore()
+const {isLoading} = storeToRefs(stockStore)
+
+watch(isLoading, () => {
+  if (isLoading.value) {
+    NProgress.start()
+  } else {
+    NProgress.done()
+  }
+})
 
 onMounted(() => {
-  stockStore.loadData()
+  if (!data.value.length) {
+    stockStore.loadData()
+  }
 })
 
 const {data} = storeToRefs(useStockStore())
