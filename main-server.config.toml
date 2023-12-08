@@ -3,7 +3,8 @@
 
 [server]
 ip              = "localhost"
-port            = 8888
+grpc_port       = 8000
+http_port       = 8001
 ticker_time_min = 5
 
 

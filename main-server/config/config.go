@@ -10,7 +10,8 @@ import (
 type Config struct {
 	Server struct {
 		Ip            string `mapstructure:"ip"`
-		Port          int    `mapstructure:"port"`
+		GrpcPort      int    `mapstructure:"grpc_port"`
+		HttpPort      int    `mapstructure:"http_port"`
 		TickerTimeMin int    `mapstructure:"ticker_time_min"`
 	} `mapstructure:"server"`
 	LogPath string `mapstructure:"log_path"`
