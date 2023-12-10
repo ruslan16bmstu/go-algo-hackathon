@@ -21,14 +21,16 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Trader_GetGlobalRating_FullMethodName = "/trader.Trader/GetGlobalRating"
 	Trader_GetStock_FullMethodName        = "/trader.Trader/GetStock"
+	Trader_GetIndustries_FullMethodName   = "/trader.Trader/GetIndustries"
 )
 
 // TraderClient is the client API for Trader service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TraderClient interface {
-	GetGlobalRating(ctx context.Context, in *GlobalRatingRequest, opts ...grpc.CallOption) (*GlobalRatingResponse, error)
-	GetStock(ctx context.Context, in *StockRequest, opts ...grpc.CallOption) (*StockResponse, error)
+	GetGlobalRating(ctx context.Context, in *GlobalRatingRequest, opts ...grpc.CallOption) (*GlobalRating, error)
+	GetStock(ctx context.Context, in *StockRequest, opts ...grpc.CallOption) (*Stock, error)
+	GetIndustries(ctx context.Context, in *IndustriesRequest, opts ...grpc.CallOption) (*Industries, error)
 }
 
 type traderClient struct {
@@ -39,8 +41,8 @@ func NewTraderClient(cc grpc.ClientConnInterface) TraderClient {
 	return &traderClient{cc}
 }
 
-func (c *traderClient) GetGlobalRating(ctx context.Context, in *GlobalRatingRequest, opts ...grpc.CallOption) (*GlobalRatingResponse, error) {
-	out := new(GlobalRatingResponse)
+func (c *traderClient) GetGlobalRating(ctx context.Context, in *GlobalRatingRequest, opts ...grpc.CallOption) (*GlobalRating, error) {
+	out := new(GlobalRating)
 	err := c.cc.Invoke(ctx, Trader_GetGlobalRating_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -48,9 +50,18 @@ func (c *traderClient) GetGlobalRating(ctx context.Context, in *GlobalRatingRequ
 	return out, nil
 }
 
-func (c *traderClient) GetStock(ctx context.Context, in *StockRequest, opts ...grpc.CallOption) (*StockResponse, error) {
-	out := new(StockResponse)
+func (c *traderClient) GetStock(ctx context.Context, in *StockRequest, opts ...grpc.CallOption) (*Stock, error) {
+	out := new(Stock)
 	err := c.cc.Invoke(ctx, Trader_GetStock_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *traderClient) GetIndustries(ctx context.Context, in *IndustriesRequest, opts ...grpc.CallOption) (*Industries, error) {
+	out := new(Industries)
+	err := c.cc.Invoke(ctx, Trader_GetIndustries_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -61,8 +72,9 @@ func (c *traderClient) GetStock(ctx context.Context, in *StockRequest, opts ...g
 // All implementations must embed UnimplementedTraderServer
 // for forward compatibility
 type TraderServer interface {
-	GetGlobalRating(context.Context, *GlobalRatingRequest) (*GlobalRatingResponse, error)
-	GetStock(context.Context, *StockRequest) (*StockResponse, error)
+	GetGlobalRating(context.Context, *GlobalRatingRequest) (*GlobalRating, error)
+	GetStock(context.Context, *StockRequest) (*Stock, error)
+	GetIndustries(context.Context, *IndustriesRequest) (*Industries, error)
 	mustEmbedUnimplementedTraderServer()
 }
 
@@ -70,11 +82,14 @@ type TraderServer interface {
 type UnimplementedTraderServer struct {
 }
 
-func (UnimplementedTraderServer) GetGlobalRating(context.Context, *GlobalRatingRequest) (*GlobalRatingResponse, error) {
+func (UnimplementedTraderServer) GetGlobalRating(context.Context, *GlobalRatingRequest) (*GlobalRating, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGlobalRating not implemented")
 }
-func (UnimplementedTraderServer) GetStock(context.Context, *StockRequest) (*StockResponse, error) {
+func (UnimplementedTraderServer) GetStock(context.Context, *StockRequest) (*Stock, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStock not implemented")
+}
+func (UnimplementedTraderServer) GetIndustries(context.Context, *IndustriesRequest) (*Industries, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetIndustries not implemented")
 }
 func (UnimplementedTraderServer) mustEmbedUnimplementedTraderServer() {}
 
@@ -125,6 +140,24 @@ func _Trader_GetStock_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Trader_GetIndustries_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IndustriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TraderServer).GetIndustries(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Trader_GetIndustries_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TraderServer).GetIndustries(ctx, req.(*IndustriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Trader_ServiceDesc is the grpc.ServiceDesc for Trader service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var Trader_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetStock",
 			Handler:    _Trader_GetStock_Handler,
+		},
+		{
+			MethodName: "GetIndustries",
+			Handler:    _Trader_GetIndustries_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

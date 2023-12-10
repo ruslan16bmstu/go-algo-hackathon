@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"pocket-trader-backend/db"
 	pb "pocket-trader-backend/pb/gen"
 )
 
@@ -28,14 +29,14 @@ func RunRest(ip string, grpcPort, httpPort int) {
 	}
 }
 
-func RunGrpc(grpcPort int) {
+func RunGrpc(grpcPort int, jsonSrc string) {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
 	pb.RegisterTraderServer(s, &RPCServer{
-		// TODO add db implementation
+		DB: db.Init(jsonSrc),
 	})
 	log.Printf("grpc-server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {

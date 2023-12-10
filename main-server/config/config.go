@@ -14,6 +14,9 @@ type Config struct {
 		HttpPort      int    `mapstructure:"http_port"`
 		TickerTimeMin int    `mapstructure:"ticker_time_min"`
 	} `mapstructure:"server"`
+	Db struct {
+		IndustriesSource string `mapstructure:"industries_source"`
+	} `mapstructure:"db"`
 	LogPath string `mapstructure:"log_path"`
 }
 

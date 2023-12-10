@@ -16,6 +16,28 @@
     "application/json"
   ],
   "paths": {
+    "/industries": {
+      "get": {
+        "operationId": "Trader_GetIndustries",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/traderIndustries"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Trader"
+        ]
+      }
+    },
     "/rating": {
       "get": {
         "operationId": "Trader_GetGlobalRating",
@@ -23,7 +45,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/traderGlobalRatingResponse"
+              "$ref": "#/definitions/traderGlobalRating"
             }
           },
           "default": {
@@ -54,14 +76,14 @@
         ]
       }
     },
-    "/stock/{id}": {
+    "/stock/{secId}": {
       "get": {
         "operationId": "Trader_GetStock",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/traderStockResponse"
+              "$ref": "#/definitions/traderStock"
             }
           },
           "default": {
@@ -73,11 +95,10 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "secId",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           }
         ],
         "tags": [
@@ -87,7 +108,7 @@
     }
   },
   "definitions": {
-    "GlobalRatingResponseCompany": {
+    "IndustriesIndustry": {
       "type": "object",
       "properties": {
         "id": {
@@ -96,14 +117,6 @@
         },
         "name": {
           "type": "string"
-        },
-        "stockPrice": {
-          "type": "number",
-          "format": "float"
-        },
-        "rating": {
-          "type": "number",
-          "format": "float"
         }
       }
     },
@@ -135,28 +148,48 @@
         }
       }
     },
-    "traderGlobalRatingResponse": {
+    "traderGlobalRating": {
       "type": "object",
       "properties": {
         "datetime": {
           "type": "string"
         },
-        "company": {
+        "stocks": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/GlobalRatingResponseCompany"
+            "$ref": "#/definitions/traderStock"
           }
         }
       }
     },
-    "traderStockResponse": {
+    "traderIndustries": {
       "type": "object",
       "properties": {
-        "name": {
+        "industries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/IndustriesIndustry"
+          }
+        }
+      }
+    },
+    "traderStock": {
+      "type": "object",
+      "properties": {
+        "industry": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "secId": {
           "type": "string"
         },
         "stockPrice": {
+          "type": "number",
+          "format": "float"
+        },
+        "delta": {
           "type": "number",
           "format": "float"
         }

@@ -28,6 +28,6 @@ func main() {
 
 	log.Println(c)
 
-	go server.RunGrpc(c.Server.GrpcPort)
+	go server.RunGrpc(c.Server.GrpcPort, c.Db.IndustriesSource)
 	server.RunRest(c.Server.Ip, c.Server.GrpcPort, c.Server.HttpPort)
 }
