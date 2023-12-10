@@ -15,7 +15,8 @@ type Config struct {
 		TickerTimeMin int    `mapstructure:"ticker_time_min"`
 	} `mapstructure:"server"`
 	Db struct {
-		IndustriesSource string `mapstructure:"industries_source"`
+		IndustriesSource  string `mapstructure:"industries_source"`
+		PredictionsSource string `mapstructure:"predictions_source"`
 	} `mapstructure:"db"`
 	LogPath string `mapstructure:"log_path"`
 }

@@ -6,16 +6,24 @@ import (
 	"log"
 	"os"
 	pb "pocket-trader-backend/pb/gen"
+	"sort"
 )
 
 type DB struct {
-	industries map[int]string
-	stocks     map[string]int
+	industries  map[int]string
+	stocks      map[string]int
+	predictions []*pb.Stock
 }
 
 type jsonStock struct {
 	SecId    string `json:"sec_id"`
 	Industry string `json:"industry"`
+}
+
+type jsonPrediction struct {
+	SecId string  `json:"sec_id"`
+	Delta float32 `json:"delta"`
+	Price float32 `json:"price"`
 }
 
 func (local *DB) GetIndustries() *pb.Industries {
@@ -31,11 +39,31 @@ func (local *DB) GetIndustries() *pb.Industries {
 	return &industries
 }
 
-func Init(industriesSource string) *DB {
+func (local *DB) GetStock(stockId string) *pb.Stock {
+	for _, val := range local.predictions {
+		if val.SecId == stockId {
+			return val
+		}
+	}
+	return nil
+}
+
+func (local *DB) GetRating(skip, limit int) []*pb.Stock {
+	return local.predictions[skip : skip+limit]
+}
+
+func Init(industriesSource, predictionsSource string) *DB {
 	db := DB{}
 	db.stocks = make(map[string]int)
 	db.industries = make(map[int]string)
 
+	db.parseStockIndustries(industriesSource)
+	db.parsePredictions(predictionsSource)
+
+	return &db
+}
+
+func (local *DB) parseStockIndustries(industriesSource string) {
 	jsonFile, err := os.Open(industriesSource)
 	if err != nil {
 		log.Fatalf("error opening db file: %v", err)
@@ -55,14 +83,40 @@ func Init(industriesSource string) *DB {
 
 	industryId := 1
 	for ind := range industriesSet {
-		db.industries[industryId] = ind
+		local.industries[industryId] = ind
 		tempMap[ind] = industryId
 		industryId++
 	}
 
 	for _, stock := range arr {
-		db.stocks[stock.SecId] = tempMap[stock.Industry]
+		local.stocks[stock.SecId] = tempMap[stock.Industry]
+	}
+}
+
+func (local *DB) parsePredictions(predictionsSource string) {
+	jsonFile, err := os.Open(predictionsSource)
+	if err != nil {
+		log.Fatalf("error opening db file: %v", err)
+	}
+	defer jsonFile.Close()
+
+	var arr []jsonPrediction
+	bytes, _ := ioutil.ReadAll(jsonFile)
+	err = json.Unmarshal([]byte(bytes), &arr)
+	if err != nil {
+		log.Println(err)
 	}
 
-	return &db
+	for _, p := range arr {
+		local.predictions = append(local.predictions, &pb.Stock{
+			Industry:   uint32(local.stocks[p.SecId]),
+			SecId:      p.SecId,
+			StockPrice: p.Price,
+			Delta:      p.Delta,
+		})
+	}
+
+	sort.Slice(local.predictions, func(i, j int) bool {
+		return local.predictions[i].Delta > local.predictions[j].Delta
+	})
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 )
 
 import pb "pocket-trader-backend/pb/gen"
@@ -14,14 +15,20 @@ type RPCServer struct {
 	DB db.Api // interface for database
 }
 
-func (s RPCServer) GetGlobalRating(context.Context, *pb.GlobalRatingRequest) (*pb.GlobalRating, error) {
-	// TODO implement
-	return nil, status.Errorf(codes.Unimplemented, "method GetGlobalRating not implemented")
+func (s RPCServer) GetGlobalRating(ctx context.Context, req *pb.GlobalRatingRequest) (*pb.GlobalRating, error) {
+	rating := s.DB.GetRating(int(req.GetSkip()), int(req.GetLimit()))
+	return &pb.GlobalRating{
+		Datetime: time.Now().Format(time.RFC3339),
+		Stocks:   rating,
+	}, nil
 }
 
-func (s RPCServer) GetStock(context.Context, *pb.StockRequest) (*pb.Stock, error) {
-	// TODO implement
-	return nil, status.Errorf(codes.Unimplemented, "method GetStock not implemented")
+func (s RPCServer) GetStock(ctx context.Context, req *pb.StockRequest) (*pb.Stock, error) {
+	stock := s.DB.GetStock(req.GetSecId())
+	if stock != nil {
+		return stock, nil
+	}
+	return nil, status.Errorf(codes.NotFound, "no such stock found")
 }
 
 func (s RPCServer) GetIndustries(context.Context, *pb.IndustriesRequest) (*pb.Industries, error) {

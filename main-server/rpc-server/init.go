@@ -29,14 +29,14 @@ func RunRest(ip string, grpcPort, httpPort int) {
 	}
 }
 
-func RunGrpc(grpcPort int, jsonSrc string) {
+func RunGrpc(grpcPort int, stocksSrc, predictionsSrc string) {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
 	pb.RegisterTraderServer(s, &RPCServer{
-		DB: db.Init(jsonSrc),
+		DB: db.Init(stocksSrc, predictionsSrc),
 	})
 	log.Printf("grpc-server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {

@@ -9,5 +9,6 @@ ticker_time_min = 5
 
 [db]
 industries_source = "./db/stocks.json"
+predictions_source = "./db/predictions.json"
 
 
