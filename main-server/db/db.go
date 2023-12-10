@@ -49,6 +49,13 @@ func (local *DB) GetStock(stockId string) *pb.Stock {
 }
 
 func (local *DB) GetRating(skip, limit int) []*pb.Stock {
+	begin, end := skip, skip+limit
+	if begin > len(local.predictions) {
+		return make([]*pb.Stock, 0, 1)
+	}
+	if end > len(local.predictions) {
+		end = len(local.predictions)
+	}
 	return local.predictions[skip : skip+limit]
 }
 
