@@ -1,12 +1,11 @@
 <template>
   <div class="flex space-x-0.5 bg-[#f2f2f2] h-[500px]">
     <div class="grow basis-1/2 bg-white overflow-y-auto">
-      <template v-for="(stock, i) in profitStocks" :key="i">
+      <template v-for="(stock, i) in profitStocks" :key="i" >
         <router-link :to="'/'+stock.secId">
           <StockShortInfo
               class="share-in-list"
               :stock="stock"
-              :prediction="stock.points"
           />
         </router-link>
       </template>
@@ -17,7 +16,6 @@
           <StockShortInfo
               class="share-in-list"
               :stock="stock"
-              :prediction="stock.points"
           />
         </router-link>
       </template>
@@ -26,12 +24,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { StockWithIndustryWithPredictionWithCandles } from '../../stores/stock'
 import StockShortInfo from './StockShortInfo.vue'
-import type { StockWithPrediction } from './types'
 
 const props = defineProps<{
-  stockPredictions: Array<StockWithPrediction>
+  stockPredictions: Array<StockWithIndustryWithPredictionWithCandles>
 }>()
 
 const profitStocks = computed(() => props.stockPredictions.filter(s => s.delta > 0).sort((a, b) => b.delta - a.delta))

@@ -49,3 +49,13 @@ body {
 .pad {
     @apply px-6 py-3;
 }
+
+.green-bg {
+    color: rgba(14, 181, 30);
+    background-color: rgba(14, 181, 30, .1);
+}
+
+.red-bg {
+    color: #e22;
+    background-color: rgba(238, 34, 34, .1);
+}

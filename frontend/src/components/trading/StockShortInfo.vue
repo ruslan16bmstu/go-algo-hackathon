@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center pad text-sm justify-between">
     <div class="flex items-center">
-      <div class="font-bold mr-2 w-10">{{ stock.secId }}</div>
+      <div class="font-bold mr-2 w-12">{{ stock.secId }}</div>
       <div>{{formatStockName(stock.name)}}</div>
     </div>
     <div class="flex space-x-4 items-center">
@@ -13,7 +13,9 @@
         <span class="font-bold">({{calcPrice(stock)}})</span>
       </div>
       <div>
-        <LineChartSVG :lines-data="linesData" :width="46" :height="26"/>
+        <CandlesWithPredictionChart class="w-[46px] h-[26px]" :prediction="prediction" :candles="stock.candles"
+                                    :hide-interface="true" :no-interactions="true"
+        />
       </div>
     </div>
   </div>
@@ -21,16 +23,16 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import LineChartSVG from '../shared/LinesChartSVG.vue'
+import { StockWithIndustryWithPredictionWithCandles } from '../../stores/stock'
+import { formatDate, getDateRange } from '../../utils/date'
+import CandlesWithPredictionChart from './CandlesWithPredictionChart.vue'
 import { formatDelta, formatPrice, formatStockName } from './format'
-import type { StockWithPrediction } from './types'
 
 const props = defineProps<{
-  stock: StockWithPrediction
-  prediction: { x: number, y: number }[]
+  stock: StockWithIndustryWithPredictionWithCandles
 }>()
 
-const calcPrice = (stock: StockWithPrediction) => {
+const calcPrice = (stock: StockWithIndustryWithPredictionWithCandles) => {
   const formattedPrice = formatPrice(stock.price)
   let len = formattedPrice.replace(',','').length
   len += +(!formattedPrice.includes(','))
@@ -44,51 +46,27 @@ const calcPrice = (stock: StockWithPrediction) => {
   return res
 }
 
-const linesData = computed(() => {
-  const lastPoint = props.prediction[props.prediction.length - 1]
-  const nextPoint = {
-    x: lastPoint.x + props.prediction.length / 3,
-    y: props.stock.delta > 0 ? lastPoint.y * 1.05 : lastPoint.y * 0.95
+const prediction = computed(() => {
+  if (!props.stock) {
+    return []
   }
-  return [
-    {
-      points: props.prediction,
-      width: 1,
-      color: props.stock.delta > 0 ? 'green' : 'red',
-    },
-    // {
-    //   points: [lastPoint, nextPoint],
-    //   width: 1,
-    //   color: 'blue',
-    // }
-  ]
+
+  const res = []
+  for (let i = 0; i <= 5; i++) {
+    const [to, from] = getDateRange(30)
+    const end = new Date(to)
+    end.setDate(end.getDate() + i)
+    res.push(
+        {
+          time: formatDate(end),
+          value: props.stock.stockPrice
+        }
+    )
+  }
+
+  return res
 })
-
-const res = [
-  {
-    "industry": "string",
-    "secId": "string",
-    "stockPrice": 0,
-    "delta": 0,
-    "prediction": [
-      {
-        "datetime": "string",
-        "price": 0
-      }
-    ]
-  }
-]
-
 </script>
 
 <style scoped>
-.green-bg {
-  color: rgba(14, 181, 30);
-  background-color: rgba(14, 181, 30, .1);
-}
-
-.red-bg {
-  color: #e22;
-  background-color: rgba(238, 34, 34, .1);
-}
 </style>

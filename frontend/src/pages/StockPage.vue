@@ -1,16 +1,16 @@
 <template>
   <PageLayout>
-    <div class="plate pad">
+    <div class="plate pad" v-if="stock">
       <div>
-        <div v-if="stock" class="flex items-center">
+        <div class="flex items-center">
           <div class="flex items-center mr-2">
             <div class="flex items-center mr-1">
-              <!--            <ArrowIcon/>-->
+              <ArrowDownIcon class="scale-150" :fill="stock.delta > 0 ? '#0eb51eff' : '#e22'" :class="{'rotate-180': stock.delta > 0}"/>
               <div class="font-bold text-4xl">{{ formatPrice(stock.price) }}</div>
             </div>
             <div class="text-xs flex flex-col">
-              <div>&nbsp;</div>
-              <!--            <div>+0,77%</div>-->
+              <div class="font-bold"
+                  :class="stock.delta > 0 ? 'green-bg' : 'red-bg'">{{ formatDelta(stock.delta) }}</div>
               <div>RUB</div>
             </div>
           </div>
@@ -22,23 +22,20 @@
         </div>
       </div>
 
-      <div class="mt-10 flex justify-center" v-if="candles.length">
-        <CandlesWithPredictionChart class="w-[800px] h-[500px]" :candles="candles" :prediction="prediction"/>
+      <div class="mt-10 flex justify-center" v-if="stock.candles.length || prediction.length">
+        <CandlesWithPredictionChart class="w-[800px] h-[500px]" :candles="stock.candles" :prediction="prediction"/>
       </div>
     </div>
   </PageLayout>
 </template>
 
 <script lang="ts" setup>
-import NProgress from 'nprogress'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
+import { computed, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { CandleData, getStockCandles } from '../api'
 import CandlesWithPredictionChart from '../components/trading/CandlesWithPredictionChart.vue'
-import { formatPrice, formatStockName } from '../components/trading/format'
-import { PredictionData } from '../components/trading/types'
+import { formatDelta, formatPrice } from '../components/trading/format'
 import PageLayout from '../layouts/PageLayout.vue'
-import ArrowIcon from '../assets/arrow-drop-down.svg'
+import ArrowDownIcon from '../assets/arrow-drop-down.svg'
 import { useStockStore } from '../stores/stock'
 import { formatDate, getDateRange } from '../utils/date'
 
@@ -47,38 +44,36 @@ const router = useRouter()
 
 const stockStore = useStockStore()
 const stock = computed(() => stockStore.getStockBySecId(route.params.stockId as string))
-const candles = ref<CandleData[]>([])
 
 onBeforeMount(() => {
   if (!stockStore.getStockBySecId(route.params.stockId as string)) {
-    router.replace('/')
+    stockStore.loadOne(route.params.stockId as string).then(() => {
+      if (!stock.value) {
+        router.replace('/')
+      }
+    })
   }
 })
 
-const prediction = ref<PredictionData[]>([])
+const prediction = computed(() => {
+  if (!stock.value) {
+    return []
+  }
 
-onMounted(() => {
-  if (stock.value) {
-      NProgress.start()
+  const res = []
+  for (let i = 0; i <= 5; i++) {
     const [to, from] = getDateRange(30)
-    getStockCandles(stock.value.secId, from, to).then((res) => {
-      candles.value = res
-      const end = new Date(to)
-      end.setDate(end.getDate() + 5)
-      const randomValue = stock.value!.price * (1 + Math.random() * 0.1 - 0.05)
-      prediction.value = [
-        {
-          time: to,
-          value: randomValue
-        },
+    const end = new Date(to)
+    end.setDate(end.getDate() + i)
+    res.push(
         {
           time: formatDate(end),
-          value: randomValue
+          value: stock.value.stockPrice
         }
-      ]
-      NProgress.done()
-    })
+    )
   }
+
+  return res
 })
 
 </script>

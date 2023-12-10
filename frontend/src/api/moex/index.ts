@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from 'axios'
 
 export type Stock = {
   name: string;
-  code: string;
   secId: string;
 }
 
@@ -35,7 +34,6 @@ export async function getAllStocks(): Promise<StockWithPrice[]> {
       
       if (stocksData.length > 0) {
         const stocks: Stock[] = stocksData.map((stockData: any) => ({
-          code: stockData[0], // Код акции
           secId: stockData[1], // secid
           name: stockData[4] // Название акции
           // Другие свойства акции, которые вам могут быть интересны
@@ -75,6 +73,11 @@ interface MarketData {
 }
 
 async function getStockPrice(symbol: string): Promise<number | null> {
+  const price = (await getStockInfo(symbol))?.price
+  return price ? Number(price) : null
+}
+
+async function getStockInfo(symbol: string): Promise<StockWithPrice | null> {
   const API_URL = `https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities/${symbol}.json`
   
   try {
@@ -82,8 +85,12 @@ async function getStockPrice(symbol: string): Promise<number | null> {
     
     // Проверяем успешность запроса и наличие данных
     if (response.status === 200 && response.data.marketdata.data.length) {
-      const price = response.data['marketdata'].data[0][12] // Индекс цены в полученных данных
-      return price ? Number(price) : null
+      const stock = response.data['securities'].data[0]
+      const secId = stock[0]
+      const price = stock[3] // Индекс цены в полученных данных
+      const name = stock[9]
+      
+      return {price, name, secId}
     } else {
       return null
     }
@@ -110,7 +117,7 @@ export async function getStockCandles(symbol: string, from: string, to: string):
       params: {
         from: from,
         to: to,
-        interval: '24',
+        interval: '1',
       },
     })
     
@@ -122,7 +129,7 @@ export async function getStockCandles(symbol: string, from: string, to: string):
         low: candle[7],
         time: candle[1],
         volume: candle[12],
-      }))
+      })).filter((c: CandleData) => c.low != null && c.open != null && c.high != null && c.close != null)
     } else {
       throw new Error('Failed to fetch data')
     }
@@ -132,3 +139,13 @@ export async function getStockCandles(symbol: string, from: string, to: string):
   }
 }
 
+
+export type StockWithCandles = StockWithPrice & {
+  candles: CandleData[]
+}
+
+export async function getStockInfoAndCandles(symbol: string, candlesFrom: string, candlesTo: string) {
+  const [stockInfo, candles] = await Promise.allSettled([getStockInfo(symbol), getStockCandles(symbol, candlesFrom, candlesTo)])
+  
+  return {...(stockInfo as any).value, candles: (candles as any).value}
+}

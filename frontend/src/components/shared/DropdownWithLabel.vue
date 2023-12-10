@@ -30,6 +30,7 @@ import ExpandIcon from '../../assets/expand.svg'
 const props = defineProps<{
   label: string
   options: T[]
+  modelValue: number
 }>()
 
 
@@ -41,16 +42,17 @@ const closeMenu = () => {
   }
 }
 
-const onSelect = (ind: number) => {
-  selectedIndex.value = ind
-  closeMenu()
-}
-
 const selectedIndex = ref(0)
 const selected = computed(() => props.options[selectedIndex.value])
 const isExpanded = ref(false)
 
-defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue'])
+
+const onSelect = (ind: number) => {
+  selectedIndex.value = ind
+  emits('update:modelValue', ind)
+  closeMenu()
+}
 </script>
 
 <style scoped>
