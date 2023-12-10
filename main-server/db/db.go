@@ -56,7 +56,7 @@ func (local *DB) GetRating(skip, limit int) []*pb.Stock {
 	if end > len(local.predictions) {
 		end = len(local.predictions)
 	}
-	return local.predictions[skip : skip+limit]
+	return local.predictions[begin:end]
 }
 
 func Init(industriesSource, predictionsSource string) *DB {
