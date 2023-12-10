@@ -23,7 +23,7 @@
       </div>
 
       <div class="mt-10 flex justify-center" v-if="candles.length">
-        <CandlesWithPredictionChart class="w-[800px] h-[500px]" :candles="candles" :prediction="[]"/>
+        <CandlesWithPredictionChart class="w-[800px] h-[500px]" :candles="candles" :prediction="prediction"/>
       </div>
     </div>
   </PageLayout>
@@ -36,10 +36,11 @@ import { useRoute, useRouter } from 'vue-router'
 import { CandleData, getStockCandles } from '../api'
 import CandlesWithPredictionChart from '../components/trading/CandlesWithPredictionChart.vue'
 import { formatPrice, formatStockName } from '../components/trading/format'
+import { PredictionData } from '../components/trading/types'
 import PageLayout from '../layouts/PageLayout.vue'
 import ArrowIcon from '../assets/arrow-drop-down.svg'
 import { useStockStore } from '../stores/stock'
-import { getDateRange } from '../utils/date'
+import { formatDate, getDateRange } from '../utils/date'
 
 const route = useRoute()
 const router = useRouter()
@@ -54,12 +55,27 @@ onBeforeMount(() => {
   }
 })
 
+const prediction = ref<PredictionData[]>([])
+
 onMounted(() => {
   if (stock.value) {
       NProgress.start()
-    const [to, from] = getDateRange(90)
+    const [to, from] = getDateRange(30)
     getStockCandles(stock.value.secId, from, to).then((res) => {
       candles.value = res
+      const end = new Date(to)
+      end.setDate(end.getDate() + 5)
+      const randomValue = stock.value!.price * (1 + Math.random() * 0.1 - 0.05)
+      prediction.value = [
+        {
+          time: to,
+          value: randomValue
+        },
+        {
+          time: formatDate(end),
+          value: randomValue
+        }
+      ]
       NProgress.done()
     })
   }
