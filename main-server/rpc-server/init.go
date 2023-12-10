@@ -13,6 +13,15 @@ import (
 	pb "pocket-trader-backend/pb/gen"
 )
 
+func cors(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization, ResponseType")
+		h.ServeHTTP(w, r)
+	})
+}
+
 func RunRest(ip string, grpcPort, httpPort int) {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancel(ctx)
@@ -24,7 +33,7 @@ func RunRest(ip string, grpcPort, httpPort int) {
 		panic(err)
 	}
 	log.Printf("http-server listening at port %d", httpPort)
-	if err := http.ListenAndServe(fmt.Sprintf(":%d", httpPort), mux); err != nil {
+	if err := http.ListenAndServe(fmt.Sprintf(":%d", httpPort), cors(mux)); err != nil {
 		panic(err)
 	}
 }
