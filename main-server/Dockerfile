@@ -1,23 +1,34 @@
-FROM golang:1.21 as builder
+FROM golang:1.21 AS builder
 
-RUN mkdir -p /build
+WORKDIR /app
 
-WORKDIR /build
+# Копируем файлы с зависимостями
+COPY go.mod go.sum ./
 
-COPY main-server .
+# Загружаем зависимости
+RUN go mod download
 
-RUN go build -a
+# Копируем исходный код проекта
+COPY . .
 
-# --------------------
+# Сборка проекта
+RUN CGO_ENABLED=0 go build -o app
 
-FROM alpine as base
+# Финальный этап
+FROM debian:bullseye-slim
 
-COPY --from=builder /build/pocket-trader-backend /usr/bin
-COPY main-server.config.toml /usr/bin/config.toml
-ENV CONFIG=/usr/bin/config.toml
-RUN mkdir -p /usr/bin/db
-COPY ./db/stocks.json /usr/bin/db/stocks.json
-COPY ./db/predictions.json /usr/bin/db/predictions.json
+WORKDIR /app
 
-WORKDIR /usr/bin
-ENTRYPOINT ["pocket-trader-backend"]
+# Копируем исполняемый файл из этапа сборки
+COPY --from=builder /app/app .
+
+COPY main-server.config.toml .
+ENV CONFIG=/app/main-server.config.toml
+COPY ./db/stocks.json ./db/
+COPY ./db/predictions.json ./db/
+
+# Порт, который будет использоваться приложением
+EXPOSE 8000
+
+# Команда для запуска приложения внутри контейнера
+CMD ["./app"]
