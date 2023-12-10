@@ -18,6 +18,16 @@ gen-proto:
 	    --openapiv2_out ./swagger                        \
 	    ./pb/api.proto
 
+build-docker:
+	docker build --pull -f ./Dockerfile -t moex-hack-backend .
+
+run-docker:
+	docker run \
+		-p 8000:8000 \
+		-p 8001:8001 \
+		--name=moex-hack-backend-instance \
+		moex-hack-backend
+
 clean:
 	rm pocket-trader-backend
 
