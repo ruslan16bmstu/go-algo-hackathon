@@ -4,13 +4,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import { createChart, ISeriesApi } from 'lightweight-charts'
+import { createChart, IChartApi, ISeriesApi } from 'lightweight-charts'
 import { CandleData } from '../../api'
+import { PredictionData } from './types'
 
-interface PredictionData {
-  time: string
-  value: number
-}
 
 const chart = ref<HTMLElement | null>(null)
 let candleSeries: ISeriesApi<'Candlestick'> | null = null
@@ -21,6 +18,8 @@ const props = defineProps<{
   prediction: PredictionData[]
 }>()
 
+const priceChart = ref<IChartApi | null>(null)
+
 // Функция для обновления графика при изменении данных
 const updateChart = () => {
   if (candleSeries && predictionSeries) {
@@ -29,18 +28,20 @@ const updateChart = () => {
       time: point.time,
       value: point.value,
     })))
+
+    priceChart.value!.timeScale().fitContent()
   }
 }
 
 const createStockChart = () => {
   if (chart.value) {
-    const priceChart = createChart(chart.value, {
+    priceChart.value = createChart(chart.value, {
       width: chart.value.clientWidth,
       height: chart.value.clientHeight,
     })
 
-    candleSeries = priceChart.addCandlestickSeries()
-    predictionSeries = priceChart.addLineSeries()
+    candleSeries = priceChart.value.addCandlestickSeries()
+    predictionSeries = priceChart.value.addLineSeries({lineWidth: 4})
 
     updateChart()
   }

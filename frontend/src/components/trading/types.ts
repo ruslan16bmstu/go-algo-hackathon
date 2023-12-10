@@ -7,3 +7,9 @@ export type Prediction = {
 }
 
 export type StockWithPrediction = StockWithPrice & Prediction
+
+
+export interface PredictionData {
+  time: string
+  value: number
+}
