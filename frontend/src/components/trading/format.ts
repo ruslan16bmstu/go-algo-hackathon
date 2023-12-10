@@ -2,7 +2,7 @@ export const formatStockName = (name: string) => {
   name = name.replace(/"/g,'').replace(/\(/g,'').replace(/\)/g, '')
     .replace('ПАО', '').replace('ао', '').replace(' -', '')
   
-  const maxLen = 20
+  const maxLen = 15
   if (name.length > maxLen) {
     name = name.slice(0, maxLen - 2) + '...'
   }
