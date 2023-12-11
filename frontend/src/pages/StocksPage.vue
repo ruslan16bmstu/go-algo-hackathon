@@ -1,6 +1,6 @@
 <template>
   <PageLayout>
-    <TitlePlate title="Прогнозы"/>
+    <TitlePlate title="Прогноз акций на неделю (для хакатона GoAlgo)"/>
     <div>
       <div class="plate">
         <div>
@@ -36,16 +36,16 @@ const selectedIndustryIndex = ref(0)
 
 const industries = [
   {"id": 0, "index": "", name: "Все"},
-  {"id": 1, "index": "MOEXEU", name: "Электроэнергетика"},
-  {"id": 2, "index": "MOEXTL", name: "Телекоммуникации"},
-  {"id": 3, "index": "MOEXMM", name: "Металлы и добыча"},
-  {"id": 4, "index": "MOEXCN", name: "Потребительский сектор"},
-  {"id": 5, "index": "MOEXRE", name: "Строительные компании"},
+  {"id": 1, "index": "MOEXFN", name: "Финансы"},
+  {"id": 2, "index": "MOEXCN", name: "Потребительский сектор"},
+  {"id": 3, "index": "MOEXCH", name: "Химия и нефтехимия"},
+  // {"id": 4, "index": "MOEXRE", name: "Строительные компании"},
+  {"id": 5, "index": "MOEXTN", name: "Транспорт"},
   {"id": 6, "index": "MOEXOG", name: "Нефть и газ"},
-  {"id": 7, "index": "MOEXFN", name: "Финансы"},
-  {"id": 8, "index": "MOEXCH", name: "Химия и нефтехимия"},
-  {"id": 9, "index": "MOEXIT", name: "Информационные технологии"},
-  {"id": 10, "index": "MOEXTN", name: "Транспорт"},
+  {"id": 7, "index": "MOEXEU", name: "Электроэнергетика"},
+  {"id": 8, "index": "MOEXTL", name: "Телекоммуникации"},
+  {"id": 9, "index": "MOEXMM", name: "Металлы и добыча"},
+  // {"id": 10, "index": "MOEXIT", name: "Информационные технологии"},
 ]
 
 const selectedIndustry = computed(() => industries[selectedIndustryIndex.value])
