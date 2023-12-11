@@ -1,0 +1,199 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Trader"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/industries": {
+      "get": {
+        "operationId": "Trader_GetIndustries",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/traderIndustries"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Trader"
+        ]
+      }
+    },
+    "/rating": {
+      "get": {
+        "operationId": "Trader_GetGlobalRating",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/traderGlobalRating"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "Trader"
+        ]
+      }
+    },
+    "/stock/{secId}": {
+      "get": {
+        "operationId": "Trader_GetStock",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/traderStock"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "secId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Trader"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "IndustriesIndustry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "traderGlobalRating": {
+      "type": "object",
+      "properties": {
+        "datetime": {
+          "type": "string"
+        },
+        "stocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/traderStock"
+          }
+        }
+      }
+    },
+    "traderIndustries": {
+      "type": "object",
+      "properties": {
+        "industries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/IndustriesIndustry"
+          }
+        }
+      }
+    },
+    "traderStock": {
+      "type": "object",
+      "properties": {
+        "industry": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "secId": {
+          "type": "string"
+        },
+        "stockPrice": {
+          "type": "number",
+          "format": "float"
+        },
+        "delta": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    }
+  }
+}
