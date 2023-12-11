@@ -1,7 +1,7 @@
 <template>
   <div class="flex space-x-0.5 bg-[#f2f2f2] h-[500px]">
     <div class="grow basis-1/2 bg-white overflow-y-auto">
-      <template v-for="(stock, i) in profitStocks" :key="i" >
+      <template v-for="(stock, i) in profitStocks" :key="i">
         <router-link :to="'/'+stock.secId">
           <StockShortInfo
               class="share-in-list"
@@ -9,6 +9,7 @@
           />
         </router-link>
       </template>
+      <div v-if="profitStocks.length === 0" class="pad">Нет данных</div>
     </div>
     <div class="grow basis-1/2 bg-white overflow-y-auto">
       <template v-for="(stock, i) in nonProfitStocks" :key="i">
@@ -19,6 +20,7 @@
           />
         </router-link>
       </template>
+      <div v-if="profitStocks.length === 0" class="pad">Нет данных</div>
     </div>
   </div>
 </template>

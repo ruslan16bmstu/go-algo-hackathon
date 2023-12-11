@@ -39,13 +39,13 @@ const industries = [
   {"id": 1, "index": "MOEXFN", name: "Финансы"},
   {"id": 2, "index": "MOEXCN", name: "Потребительский сектор"},
   {"id": 3, "index": "MOEXCH", name: "Химия и нефтехимия"},
-  // {"id": 4, "index": "MOEXRE", name: "Строительные компании"},
+  {"id": 4, "index": "MOEXRE", name: "Строительные компании"},
   {"id": 5, "index": "MOEXTN", name: "Транспорт"},
   {"id": 6, "index": "MOEXOG", name: "Нефть и газ"},
   {"id": 7, "index": "MOEXEU", name: "Электроэнергетика"},
   {"id": 8, "index": "MOEXTL", name: "Телекоммуникации"},
   {"id": 9, "index": "MOEXMM", name: "Металлы и добыча"},
-  // {"id": 10, "index": "MOEXIT", name: "Информационные технологии"},
+  {"id": 10, "index": "MOEXIT", name: "IT-сектор"},
 ]
 
 const selectedIndustry = computed(() => industries[selectedIndustryIndex.value])
