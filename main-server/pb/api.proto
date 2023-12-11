@@ -1,0 +1,57 @@
+syntax = "proto3";
+package trader;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/ruslan16bmstu/go-algo-hackathon/main-server/pb";
+
+message GlobalRatingRequest {
+  uint32 skip  = 1;
+  uint32 limit = 2;
+}
+
+message GlobalRating {
+  string         datetime = 1;
+  repeated Stock stocks  = 2;
+}
+
+message StockRequest {
+  string sec_id = 1;
+}
+
+message Stock {
+  uint32 industry    = 1;
+  string sec_id      = 2;
+  float  stock_price = 3;
+  float  delta       = 4;
+}
+
+message IndustriesRequest {}
+
+message Industries {
+  message Industry {
+    uint32 id   = 1;
+    string name = 2;
+  }
+  repeated Industry industries  = 1;
+}
+
+
+service Trader {
+  rpc GetGlobalRating (GlobalRatingRequest) returns (GlobalRating) {
+    option (google.api.http) = {
+      get: "/rating"
+    };
+  };
+  rpc GetStock (StockRequest) returns (Stock) {
+    option (google.api.http) = {
+      get: "/stock/{sec_id}"
+    };
+  }
+  rpc GetIndustries (IndustriesRequest) returns (Industries) {
+    option (google.api.http) = {
+      get: "/industries"
+    };
+  }
+}
+
