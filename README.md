@@ -1,20 +1,15 @@
-# go-algo-hackathon
+# Рекомендательная система по подбору акций для покупок или продаж для хакатона GoAlgo (команда Profit Pulse Developers)
+Идея проекта:
 
-## TODO
+> Создание рекомендательной системы по подбору акций для покупок или продаж, показывающей прогноз движения каждой из акций российского сегмента (в списке, отсортированного по прогнозируемой доходности).
+> Для реализации модели обучения по данным AlgoPack (сведения о дневных свечах, объемах продаж, движении отраслевого индекса Мосбиржи) на вход нейронной сети подавались: изменнеия движения свечей, изменение 200-скользящей средней, изменение расстояния от свечей до 200-скользящей средней, изменения объемов продаж, изменение отраслевого индекса Мосбиржи в который входит акция; на выходе - анализировалась стоимость акций через неделю.
 
-1. Сделать настроить генерацию из прото в grpc и http-proxy
-2. Реализовать выгрузку данных из бд
-3. Реализовать загрузку данных из ALGOPACK в бд
-4. Реализовать отправку сообщений пользователю который подключил свое собственное api
+Ссылка на приложение: [Profit Pulse](https://profit-pulse.netlify.app/)
 
+## Интерфейс ресурса
 
-- Install protobuf;
+Главная страница:
+![Главная страница](https://github.com/ruslan16bmstu/go-algo-hackathon/assets/29488043/776634a3-b8f0-4ac4-b6a4-64d7a468bc8d)
 
-- To install `grpc-reverse-proxy-tools`
-```
-go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
-go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
-go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-```
-
+Страница выбранной акции:
+![image](https://github.com/ruslan16bmstu/go-algo-hackathon/assets/29488043/6b5c9cd5-6efd-4431-9644-c7bf1a13343c)
